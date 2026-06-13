@@ -134,6 +134,13 @@ class ScreenCaptureService : Service() {
         captureThread = HandlerThread("Capture").apply { start() }
         captureHandler = Handler(captureThread!!.looper)
 
+        // Android 14+ requires registering a Callback BEFORE createVirtualDisplay
+        mediaProjection?.registerCallback(object : MediaProjection.Callback() {
+            override fun onStop() {
+                Log.d(TAG, "MediaProjection stopped by system")
+            }
+        }, captureHandler)
+
         imageReader = ImageReader.newInstance(
             captureWidth, captureHeight,
             PixelFormat.RGBA_8888, 2
