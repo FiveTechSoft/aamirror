@@ -1,0 +1,181 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.aamirror"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="29"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+11-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:4:5-78
+11-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:4:22-75
+12    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+12-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:5:5-77
+12-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:5:22-74
+13    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+13-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:6:5-94
+13-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:6:22-91
+14    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
+14-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:7:5-85
+14-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:7:22-82
+15    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+15-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:8:5-77
+15-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:8:22-74
+16
+17    <uses-feature
+17-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:10:5-12:36
+18        android:name="android.hardware.car.automotive"
+18-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:11:9-55
+19        android:required="false" />
+19-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:12:9-33
+20
+21    <queries>
+21-->[androidx.car.app:app:1.4.0] C:\Users\Anto\.gradle\caches\transforms-3\0572b276bbba47041960f8553a26e342\transformed\app-1.4.0\AndroidManifest.xml:23:5-28:15
+22        <provider
+22-->[androidx.car.app:app:1.4.0] C:\Users\Anto\.gradle\caches\transforms-3\0572b276bbba47041960f8553a26e342\transformed\app-1.4.0\AndroidManifest.xml:24:9-27:43
+23            android:name="androidx.car.app.connection.provider"
+23-->[androidx.car.app:app:1.4.0] C:\Users\Anto\.gradle\caches\transforms-3\0572b276bbba47041960f8553a26e342\transformed\app-1.4.0\AndroidManifest.xml:25:13-64
+24            android:authorities="androidx.car.app.connection" />
+24-->[androidx.car.app:app:1.4.0] C:\Users\Anto\.gradle\caches\transforms-3\0572b276bbba47041960f8553a26e342\transformed\app-1.4.0\AndroidManifest.xml:26:13-62
+25    </queries>
+26
+27    <permission
+27-->[androidx.core:core:1.12.0] C:\Users\Anto\.gradle\caches\transforms-3\97415b8e2c2b19b88cea32d17b874052\transformed\core-1.12.0\AndroidManifest.xml:22:5-24:47
+28        android:name="com.aamirror.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+28-->[androidx.core:core:1.12.0] C:\Users\Anto\.gradle\caches\transforms-3\97415b8e2c2b19b88cea32d17b874052\transformed\core-1.12.0\AndroidManifest.xml:23:9-81
+29        android:protectionLevel="signature" />
+29-->[androidx.core:core:1.12.0] C:\Users\Anto\.gradle\caches\transforms-3\97415b8e2c2b19b88cea32d17b874052\transformed\core-1.12.0\AndroidManifest.xml:24:9-44
+30
+31    <uses-permission android:name="com.aamirror.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+31-->[androidx.core:core:1.12.0] C:\Users\Anto\.gradle\caches\transforms-3\97415b8e2c2b19b88cea32d17b874052\transformed\core-1.12.0\AndroidManifest.xml:26:5-97
+31-->[androidx.core:core:1.12.0] C:\Users\Anto\.gradle\caches\transforms-3\97415b8e2c2b19b88cea32d17b874052\transformed\core-1.12.0\AndroidManifest.xml:26:22-94
+32
+33    <application
+33-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:14:5-60:19
+34        android:allowBackup="true"
+34-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:15:9-35
+35        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+35-->[androidx.core:core:1.12.0] C:\Users\Anto\.gradle\caches\transforms-3\97415b8e2c2b19b88cea32d17b874052\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
+36        android:debuggable="true"
+37        android:extractNativeLibs="false"
+38        android:icon="@mipmap/ic_launcher"
+38-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:16:9-43
+39        android:label="@string/app_name"
+39-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:17:9-41
+40        android:supportsRtl="true"
+40-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:18:9-35
+41        android:theme="@style/Theme.AAMirror" >
+41-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:19:9-46
+42        <activity
+42-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:21:9-29:20
+43            android:name="com.aamirror.MainActivity"
+43-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:22:13-41
+44            android:exported="true"
+44-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:23:13-36
+45            android:launchMode="singleTop" >
+45-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:24:13-43
+46            <intent-filter>
+46-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:25:13-28:29
+47                <action android:name="android.intent.action.MAIN" />
+47-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:26:17-69
+47-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:26:25-66
+48
+49                <category android:name="android.intent.category.LAUNCHER" />
+49-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:27:17-77
+49-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:27:27-74
+50            </intent-filter>
+51        </activity>
+52
+53        <service
+53-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:31:9-34:40
+54            android:name="com.aamirror.ScreenCaptureService"
+54-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:32:13-49
+55            android:exported="false"
+55-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:34:13-37
+56            android:foregroundServiceType="mediaProjection" />
+56-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:33:13-60
+57        <service
+57-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:36:9-46:19
+58            android:name="com.aamirror.TouchInjectService"
+58-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:37:13-47
+59            android:exported="true"
+59-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:39:13-36
+60            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+60-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:38:13-79
+61            <intent-filter>
+61-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:40:13-42:29
+62                <action android:name="android.accessibilityservice.AccessibilityService" />
+62-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:41:17-92
+62-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:41:25-89
+63            </intent-filter>
+64
+65            <meta-data
+65-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:43:13-45:65
+66                android:name="android.accessibilityservice"
+66-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:44:17-60
+67                android:resource="@xml/accessibility_service" />
+67-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:45:17-62
+68        </service>
+69        <service
+69-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:48:9-54:19
+70            android:name="com.aamirror.car.MirrorCarAppService"
+70-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:49:13-52
+71            android:exported="true" >
+71-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:50:13-36
+72            <intent-filter>
+72-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:51:13-53:29
+73                <action android:name="androidx.car.app.CarAppService" />
+73-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:52:17-73
+73-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:52:25-70
+74            </intent-filter>
+75        </service>
+76
+77        <meta-data
+77-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:56:9-58:59
+78            android:name="com.google.android.gms.car.application"
+78-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:57:13-66
+79            android:resource="@xml/automotive_app_desc" />
+79-->C:\Android\aamirror\app\src\main\AndroidManifest.xml:58:13-56
+80
+81        <activity
+81-->[androidx.car.app:app:1.4.0] C:\Users\Anto\.gradle\caches\transforms-3\0572b276bbba47041960f8553a26e342\transformed\app-1.4.0\AndroidManifest.xml:31:9-34:75
+82            android:name="androidx.car.app.CarAppPermissionActivity"
+82-->[androidx.car.app:app:1.4.0] C:\Users\Anto\.gradle\caches\transforms-3\0572b276bbba47041960f8553a26e342\transformed\app-1.4.0\AndroidManifest.xml:32:13-69
+83            android:exported="false"
+83-->[androidx.car.app:app:1.4.0] C:\Users\Anto\.gradle\caches\transforms-3\0572b276bbba47041960f8553a26e342\transformed\app-1.4.0\AndroidManifest.xml:33:13-37
+84            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+84-->[androidx.car.app:app:1.4.0] C:\Users\Anto\.gradle\caches\transforms-3\0572b276bbba47041960f8553a26e342\transformed\app-1.4.0\AndroidManifest.xml:34:13-72
+85
+86        <receiver
+86-->[androidx.car.app:app:1.4.0] C:\Users\Anto\.gradle\caches\transforms-3\0572b276bbba47041960f8553a26e342\transformed\app-1.4.0\AndroidManifest.xml:36:9-38:40
+87            android:name="androidx.car.app.notification.CarAppNotificationBroadcastReceiver"
+87-->[androidx.car.app:app:1.4.0] C:\Users\Anto\.gradle\caches\transforms-3\0572b276bbba47041960f8553a26e342\transformed\app-1.4.0\AndroidManifest.xml:37:13-93
+88            android:exported="false" />
+88-->[androidx.car.app:app:1.4.0] C:\Users\Anto\.gradle\caches\transforms-3\0572b276bbba47041960f8553a26e342\transformed\app-1.4.0\AndroidManifest.xml:38:13-37
+89
+90        <provider
+90-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Anto\.gradle\caches\transforms-3\1e813655ffdfd31673408563a57a86b7\transformed\emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+91            android:name="androidx.startup.InitializationProvider"
+91-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Anto\.gradle\caches\transforms-3\1e813655ffdfd31673408563a57a86b7\transformed\emoji2-1.2.0\AndroidManifest.xml:25:13-67
+92            android:authorities="com.aamirror.androidx-startup"
+92-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Anto\.gradle\caches\transforms-3\1e813655ffdfd31673408563a57a86b7\transformed\emoji2-1.2.0\AndroidManifest.xml:26:13-68
+93            android:exported="false" >
+93-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Anto\.gradle\caches\transforms-3\1e813655ffdfd31673408563a57a86b7\transformed\emoji2-1.2.0\AndroidManifest.xml:27:13-37
+94            <meta-data
+94-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Anto\.gradle\caches\transforms-3\1e813655ffdfd31673408563a57a86b7\transformed\emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+95                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+95-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Anto\.gradle\caches\transforms-3\1e813655ffdfd31673408563a57a86b7\transformed\emoji2-1.2.0\AndroidManifest.xml:30:17-75
+96                android:value="androidx.startup" />
+96-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Anto\.gradle\caches\transforms-3\1e813655ffdfd31673408563a57a86b7\transformed\emoji2-1.2.0\AndroidManifest.xml:31:17-49
+97            <meta-data
+97-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\Anto\.gradle\caches\transforms-3\c8356e2f8412c80adfdeafb1bc40cf03\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:31:13-33:52
+98                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+98-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\Anto\.gradle\caches\transforms-3\c8356e2f8412c80adfdeafb1bc40cf03\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:32:17-78
+99                android:value="androidx.startup" />
+99-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\Anto\.gradle\caches\transforms-3\c8356e2f8412c80adfdeafb1bc40cf03\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:33:17-49
+100        </provider>
+101    </application>
+102
+103</manifest>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accent">#0F9D58</color>
+    <color name="background">#1A1A2E</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0B0B0</color>
+    <string name="accessibility_service_description">AA Mirror Touch — Injects touch events from car display back to phone</string>
+    <string name="app_name">AA Mirror</string>
+    <string name="btn_start">Start Capture</string>
+    <string name="btn_stop">Stop Capture</string>
+    <string name="car_status_connected">Car connected — mirroring</string>
+    <string name="car_status_disconnected">Car disconnected</string>
+    <string name="car_status_waiting">Waiting for car connection</string>
+    <string name="notification_channel">AA Mirror</string>
+    <string name="notification_stop">Stop</string>
+    <string name="notification_title">Screen sharing active</string>
+    <string name="perm_accessibility_missing">Accessibility Service: NOT enabled</string>
+    <string name="perm_all_granted">All permissions granted</string>
+    <string name="perm_overlay_missing">Display over other apps: NOT granted</string>
+    <string name="status_capturing">Screen capture active. Connect to Android Auto.</string>
+    <string name="status_error">Error: %1$s</string>
+    <string name="status_idle">Ready. Tap Start to begin screen mirroring.</string>
+    <string name="status_mirroring">Mirroring to car display</string>
+    <style name="Theme.AAMirror" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorPrimary">@color/accent</item>
+    </style>
+</resources>

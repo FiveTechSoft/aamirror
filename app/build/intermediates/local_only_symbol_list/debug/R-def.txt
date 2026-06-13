@@ -1,0 +1,33 @@
+R_DEF: Internal format may change without notice
+local
+color accent
+color background
+color text_primary
+color text_secondary
+drawable ic_notification
+id carStatus
+id permissionStatus
+id startStopButton
+id statusText
+layout activity_main
+mipmap ic_launcher
+string accessibility_service_description
+string app_name
+string btn_start
+string btn_stop
+string car_status_connected
+string car_status_disconnected
+string car_status_waiting
+string notification_channel
+string notification_stop
+string notification_title
+string perm_accessibility_missing
+string perm_all_granted
+string perm_overlay_missing
+string status_capturing
+string status_error
+string status_idle
+string status_mirroring
+style Theme.AAMirror
+xml accessibility_service
+xml automotive_app_desc

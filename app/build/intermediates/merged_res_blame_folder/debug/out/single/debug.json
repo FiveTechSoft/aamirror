@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "C:\\Users\\Anto\\.gradle\\daemon\\8.4\\com.aamirror.app-merged_res-4:\\xml_accessibility_service.xml.flat",
+        "source": "C:\\Users\\Anto\\.gradle\\daemon\\8.4\\com.aamirror.app-main-6:\\xml\\accessibility_service.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anto\\.gradle\\daemon\\8.4\\com.aamirror.app-merged_res-4:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\Anto\\.gradle\\daemon\\8.4\\com.aamirror.app-main-6:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anto\\.gradle\\daemon\\8.4\\com.aamirror.app-merged_res-4:\\mipmap-hdpi_ic_launcher.xml.flat",
+        "source": "C:\\Users\\Anto\\.gradle\\daemon\\8.4\\com.aamirror.app-main-6:\\mipmap-hdpi\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anto\\.gradle\\daemon\\8.4\\com.aamirror.app-merged_res-4:\\drawable_ic_notification.xml.flat",
+        "source": "C:\\Users\\Anto\\.gradle\\daemon\\8.4\\com.aamirror.app-main-6:\\drawable\\ic_notification.xml"
+    },
+    {
+        "merged": "C:\\Users\\Anto\\.gradle\\daemon\\8.4\\com.aamirror.app-merged_res-4:\\xml_automotive_app_desc.xml.flat",
+        "source": "C:\\Users\\Anto\\.gradle\\daemon\\8.4\\com.aamirror.app-main-6:\\xml\\automotive_app_desc.xml"
+    },
+    {
+        "merged": "com.aamirror.app-merged_res-4:/xml_accessibility_service.xml.flat",
+        "source": "com.aamirror.app-main-6:/xml/accessibility_service.xml"
+    }
+]

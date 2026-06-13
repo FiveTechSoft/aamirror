@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AA Mirror</string>
+    <string name="status_idle">Ready. Tap Start to begin screen mirroring.</string>
+    <string name="status_capturing">Screen capture active. Connect to Android Auto.</string>
+    <string name="status_mirroring">Mirroring to car display</string>
+    <string name="status_error">Error: %1$s</string>
+    <string name="btn_start">Start Capture</string>
+    <string name="btn_stop">Stop Capture</string>
+    <string name="accessibility_service_description">AA Mirror Touch — Injects touch events from car display back to phone</string>
+    <string name="car_status_waiting">Waiting for car connection</string>
+    <string name="car_status_connected">Car connected — mirroring</string>
+    <string name="car_status_disconnected">Car disconnected</string>
+    <string name="notification_channel">AA Mirror</string>
+    <string name="notification_title">Screen sharing active</string>
+    <string name="notification_stop">Stop</string>
+    <string name="perm_overlay_missing">Display over other apps: NOT granted</string>
+    <string name="perm_accessibility_missing">Accessibility Service: NOT enabled</string>
+    <string name="perm_all_granted">All permissions granted</string>
+</resources>
