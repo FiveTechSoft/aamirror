@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -19,8 +18,6 @@ import androidx.car.app.Screen
 import androidx.car.app.Session
 import androidx.car.app.SurfaceCallback
 import androidx.car.app.SurfaceContainer
-import androidx.car.app.model.Action
-import androidx.car.app.model.ActionStrip
 import androidx.car.app.model.Pane
 import androidx.car.app.model.PaneTemplate
 import androidx.car.app.model.Row
@@ -50,7 +47,6 @@ class MirrorCarSession : Session() {
             CarBridge.carToAppMessenger = carMessenger
             appBound = true
 
-            // If surface already available, send it now
             currentSurfaceContainer?.let { sendSurfaceReady(it) }
         }
 
@@ -65,11 +61,9 @@ class MirrorCarSession : Session() {
     override fun onCreateScreen(intent: Intent): Screen {
         Log.d(TAG, "Creating screen")
 
-        // Bind to ScreenCaptureService in main process (same APK)
         val bindIntent = Intent(carContext, com.aamirror.ScreenCaptureService::class.java)
         carContext.bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE)
 
-        // Observe lifecycle to unbind when session is destroyed
         lifecycle.addObserver(LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_DESTROY && appBound) {
                 carContext.unbindService(serviceConnection)
@@ -133,14 +127,8 @@ class MirrorCarSession : Session() {
                 }
             }
 
-            override fun onVisibleAreaChanged(rect: Rect) {
-                // Not needed for mirroring
-            }
-
-            override fun onStableAreaChanged(rect: Rect) {
-                // Not needed for mirroring
-            }
-
+            override fun onVisibleAreaChanged(rect: android.graphics.Rect) {}
+            override fun onStableAreaChanged(rect: android.graphics.Rect) {}
             override fun onClick(x: Float, y: Float) {
                 Log.d(TAG, "onClick: $x, $y")
                 sendTouchEvent(x, y, MotionEvent.ACTION_DOWN)
@@ -171,14 +159,14 @@ class MirrorCarSession : Session() {
                 )
             }
 
-            override fun onScale(x: Float, y: Float, scale: Float) {
-                // Not needed for mirroring
-            }
+            override fun onScale(x: Float, y: Float, scale: Float) {}
         }
 
         init {
-            // Register SurfaceCallback through AppManager (the way surfaces work in v1.4.0)
-            carContext.getCarService(AppManager::class.java).setSurfaceCallback(surfaceCallback)
+            // SurfaceCallback DISABLED for testing — Google may block apps using this API
+            // from appearing in the AA launcher on production hosts (v16.9+).
+            // If the app appears without this line, SurfaceCallback is the blocker.
+            // carContext.getCarService(AppManager::class.java).setSurfaceCallback(surfaceCallback)
         }
 
         override fun onGetTemplate(): Template {
