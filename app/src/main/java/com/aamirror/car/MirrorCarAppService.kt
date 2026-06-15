@@ -12,7 +12,7 @@ class MirrorCarAppService : CarAppService() {
     }
 
     override fun createHostValidator(): HostValidator {
-        Log.d(TAG, "createHostValidator: allowing all hosts")
+        Log.d(TAG, "createHostValidator: allowing known Android Auto hosts")
         return HostValidator.ALLOW_ALL_HOSTS_VALIDATOR
     }
 

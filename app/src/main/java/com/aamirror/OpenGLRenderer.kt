@@ -82,14 +82,14 @@ class OpenGLRenderer {
         displayWidth = width
         displayHeight = height
         isRunning = true
-        renderThread = Thread(RenderLoop(surface), "GLRender").apply { start() }
+        renderThread = Thread(RenderLoop(surface), "GLRender").apply { isDaemon = true; start() }
         Log.d(TAG, "Renderer started: ${width}x${height}")
     }
 
     fun stop() {
         isRunning = false
         renderThread?.interrupt()
-        renderThread?.join(500)
+        renderThread?.join(1000)
         renderThread = null
         frameQueue.clear()
         Log.d(TAG, "Renderer stopped")
@@ -98,18 +98,22 @@ class OpenGLRenderer {
     fun updateSurfaceSize(width: Int, height: Int) {
         displayWidth = width
         displayHeight = height
-        GLES20.glViewport(0, 0, width, height)
     }
 
     private inner class RenderLoop(private val surface: Surface) : Runnable {
         override fun run() {
             if (!initEGL(surface)) return
-            if (!initGL()) return
+            if (!initGL()) {
+                cleanupGL()
+                cleanupEGL()
+                return
+            }
 
             while (isRunning) {
                 val frame = try {
                     frameQueue.poll(FRAME_TIMEOUT_MS, TimeUnit.MILLISECONDS)
                 } catch (e: InterruptedException) {
+                    Thread.currentThread().interrupt()
                     null
                 } ?: continue
 
@@ -131,6 +135,8 @@ class OpenGLRenderer {
         val version = IntArray(2)
         if (!EGL14.eglInitialize(eglDisplay, version, 0, version, 1)) {
             Log.e(TAG, "eglInitialize failed")
+            EGL14.eglTerminate(eglDisplay)
+            eglDisplay = null
             return false
         }
 
@@ -149,6 +155,8 @@ class OpenGLRenderer {
         val numConfigs = IntArray(1)
         if (!EGL14.eglChooseConfig(eglDisplay, configAttribs, 0, configs, 0, 1, numConfigs, 0)) {
             Log.e(TAG, "eglChooseConfig failed")
+            EGL14.eglTerminate(eglDisplay)
+            eglDisplay = null
             return false
         }
 
@@ -159,12 +167,23 @@ class OpenGLRenderer {
         eglContext = EGL14.eglCreateContext(
             eglDisplay, configs[0], EGL14.EGL_NO_CONTEXT, contextAttribs, 0
         )
+        if (eglContext == EGL14.EGL_NO_CONTEXT) {
+            Log.e(TAG, "eglCreateContext failed")
+            cleanupEGL()
+            return false
+        }
 
         val surfaceAttribs = intArrayOf(EGL14.EGL_NONE)
         eglSurface = EGL14.eglCreateWindowSurface(eglDisplay, configs[0], surface, surfaceAttribs, 0)
+        if (eglSurface == EGL14.EGL_NO_SURFACE) {
+            Log.e(TAG, "eglCreateWindowSurface failed")
+            cleanupEGL()
+            return false
+        }
 
         if (!EGL14.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext)) {
             Log.e(TAG, "eglMakeCurrent failed: ${EGL14.eglGetError()}")
+            cleanupEGL()
             return false
         }
 
@@ -244,8 +263,15 @@ class OpenGLRenderer {
         if (linkStatus[0] == 0) {
             Log.e(TAG, "Link failed: ${GLES20.glGetProgramInfoLog(program)}")
             GLES20.glDeleteProgram(program)
+            GLES20.glDeleteShader(vertexShader)
+            GLES20.glDeleteShader(fragmentShader)
             return 0
         }
+
+        GLES20.glDetachShader(program, vertexShader)
+        GLES20.glDetachShader(program, fragmentShader)
+        GLES20.glDeleteShader(vertexShader)
+        GLES20.glDeleteShader(fragmentShader)
         return program
     }
 
@@ -269,9 +295,18 @@ class OpenGLRenderer {
     }
 
     private fun cleanupEGL() {
-        EGL14.eglMakeCurrent(eglDisplay, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_CONTEXT)
-        EGL14.eglDestroySurface(eglDisplay, eglSurface)
-        EGL14.eglDestroyContext(eglDisplay, eglContext)
-        EGL14.eglTerminate(eglDisplay)
+        if (eglDisplay != null && eglDisplay != EGL14.EGL_NO_DISPLAY) {
+            EGL14.eglMakeCurrent(eglDisplay, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_CONTEXT)
+            if (eglSurface != null && eglSurface != EGL14.EGL_NO_SURFACE) {
+                EGL14.eglDestroySurface(eglDisplay, eglSurface)
+            }
+            if (eglContext != null && eglContext != EGL14.EGL_NO_CONTEXT) {
+                EGL14.eglDestroyContext(eglDisplay, eglContext)
+            }
+            EGL14.eglTerminate(eglDisplay)
+        }
+        eglSurface = null
+        eglContext = null
+        eglDisplay = null
     }
 }

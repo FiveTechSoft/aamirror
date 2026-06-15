@@ -5,6 +5,7 @@ import android.accessibilityservice.GestureDescription
 import android.graphics.Path
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+import java.lang.ref.WeakReference
 
 /**
  * Injects touch events from car display back to phone screen.
@@ -16,9 +17,11 @@ class TouchInjectService : AccessibilityService() {
     companion object {
         private const val TAG = "TouchInjectService"
 
-        @Volatile
-        var instance: TouchInjectService? = null
-            private set
+        private var instanceRef: WeakReference<TouchInjectService>? = null
+
+        var instance: TouchInjectService?
+            get() = instanceRef?.get()
+            private set(value) { instanceRef = if (value != null) WeakReference(value) else null }
 
         fun isEnabled(): Boolean = instance != null
     }
@@ -38,6 +41,12 @@ class TouchInjectService : AccessibilityService() {
 
     override fun onInterrupt() {
         Log.d(TAG, "Service interrupted")
+    }
+
+    override fun onDestroy() {
+        instance = null
+        Log.d(TAG, "Service destroyed")
+        super.onDestroy()
     }
 
     override fun onUnbind(intent: android.content.Intent?): Boolean {
@@ -60,10 +69,9 @@ class TouchInjectService : AccessibilityService() {
         carWidth: Int, carHeight: Int,
         action: Int
     ) {
+        if (carWidth <= 0 || carHeight <= 0) return
         val phoneX = (carX / carWidth) * phoneWidth
         val phoneY = (carY / carHeight) * phoneHeight
-
-        Log.d(TAG, "Inject: car(${carX.toInt()},${carY.toInt()}) → phone(${phoneX.toInt()},${phoneY.toInt()}) action=$action")
 
         val path = Path().apply {
             moveTo(phoneX, phoneY)

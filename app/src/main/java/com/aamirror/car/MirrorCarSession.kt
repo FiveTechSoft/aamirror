@@ -35,6 +35,7 @@ class MirrorCarSession : Session() {
     private var carMessenger: Messenger? = null
     private var appBound = false
     private var currentSurfaceContainer: SurfaceContainer? = null
+    private val clickHandler = Handler(Looper.getMainLooper())
 
     private val carHandler = Messenger(
         CarBridge.CarIncomingHandler(Looper.getMainLooper())
@@ -62,11 +63,18 @@ class MirrorCarSession : Session() {
         Log.d(TAG, "Creating screen")
 
         val bindIntent = Intent(carContext, com.aamirror.ScreenCaptureService::class.java)
-        carContext.bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+        val bound = carContext.bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+        if (!bound) {
+            Log.e(TAG, "Failed to bind to ScreenCaptureService")
+        }
 
         lifecycle.addObserver(LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_DESTROY && appBound) {
-                carContext.unbindService(serviceConnection)
+                try {
+                    carContext.unbindService(serviceConnection)
+                } catch (e: IllegalArgumentException) {
+                    Log.w(TAG, "unbindService failed", e)
+                }
                 appBound = false
                 Log.d(TAG, "Unbound from ScreenCaptureService")
             }
@@ -82,6 +90,7 @@ class MirrorCarSession : Session() {
                 obj = container.surface
                 arg1 = container.width
                 arg2 = container.height
+                data = Bundle().apply { putInt("dpi", container.dpi) }
             }
             messenger.send(msg)
             Log.d(TAG, "Sent surface to main process: ${container.width}x${container.height}")
@@ -94,9 +103,11 @@ class MirrorCarSession : Session() {
         val messenger = carMessenger ?: return
         try {
             val msg = Message.obtain(null, CarBridge.MSG_TOUCH_EVENT).apply {
-                arg1 = x.toInt()
-                arg2 = y.toInt()
-                data = Bundle().apply { putInt("action", action) }
+                data = Bundle().apply {
+                    putFloat("x", x)
+                    putFloat("y", y)
+                    putInt("action", action)
+                }
             }
             messenger.send(msg)
         } catch (e: RemoteException) {
@@ -132,7 +143,7 @@ class MirrorCarSession : Session() {
             override fun onClick(x: Float, y: Float) {
                 Log.d(TAG, "onClick: $x, $y")
                 sendTouchEvent(x, y, MotionEvent.ACTION_DOWN)
-                Handler(Looper.getMainLooper()).postDelayed({
+                clickHandler.postDelayed({
                     sendTouchEvent(x, y, MotionEvent.ACTION_UP)
                 }, 50)
             }
@@ -146,17 +157,19 @@ class MirrorCarSession : Session() {
                 val endX = carW / 2f + velocityX / 10f
                 val endY = carH / 2f + velocityY / 10f
                 sendTouchEvent(startX, startY, MotionEvent.ACTION_DOWN)
-                sendTouchEvent(endX, endY, MotionEvent.ACTION_MOVE)
-                sendTouchEvent(endX, endY, MotionEvent.ACTION_UP)
+                clickHandler.postDelayed({
+                    sendTouchEvent(endX, endY, MotionEvent.ACTION_MOVE)
+                    clickHandler.postDelayed({
+                        sendTouchEvent(endX, endY, MotionEvent.ACTION_UP)
+                    }, 16)
+                }, 16)
             }
 
             override fun onScroll(distanceX: Float, distanceY: Float) {
                 Log.d(TAG, "onScroll: $distanceX, $distanceY")
-                sendTouchEvent(
-                    (currentSurfaceContainer?.width ?: 1920) / 2f,
-                    (currentSurfaceContainer?.height ?: 1080) / 2f,
-                    MotionEvent.ACTION_MOVE
-                )
+                val carW = currentSurfaceContainer?.width ?: 1920
+                val carH = currentSurfaceContainer?.height ?: 1080
+                sendTouchEvent(carW / 2f - distanceX, carH / 2f - distanceY, MotionEvent.ACTION_MOVE)
             }
 
             override fun onScale(x: Float, y: Float, scale: Float) {}

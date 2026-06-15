@@ -14,7 +14,9 @@
     <string name="notification_channel">AA Mirror</string>
     <string name="notification_title">Screen sharing active</string>
     <string name="notification_stop">Stop</string>
+    <string name="notification_content">Screen is being mirrored to Android Auto</string>
     <string name="perm_overlay_missing">Display over other apps: NOT granted</string>
     <string name="perm_accessibility_missing">Accessibility Service: NOT enabled</string>
     <string name="perm_all_granted">All permissions granted</string>
+    <string name="perm_notifications_missing">Notifications: NOT granted</string>
 </resources>

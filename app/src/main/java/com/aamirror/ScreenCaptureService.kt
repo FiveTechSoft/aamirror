@@ -11,6 +11,7 @@ import android.hardware.display.VirtualDisplay
 import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
+import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
@@ -19,7 +20,7 @@ import android.os.Messenger
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.WindowManager
-import android.graphics.PixelFormat
+import android.graphics.ImageFormat
 import com.aamirror.comm.CarBridge
 
 class ScreenCaptureService : Service() {
@@ -45,9 +46,9 @@ class ScreenCaptureService : Service() {
     private var captureHandler: Handler? = null
 
     private var renderer: OpenGLRenderer? = null
-    private var phoneWidth = 1440
-    private var phoneHeight = 3088
-    private var phoneDpi = 500
+    private var phoneWidth = 0
+    private var phoneHeight = 0
+    private var phoneDpi = 160
     private var downscale = 1.0f
 
     private val appMessenger = Messenger(
@@ -66,6 +67,11 @@ class ScreenCaptureService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent == null) {
+            return START_NOT_STICKY
+        }
+
+        if (intent.action == "STOP") {
+            Log.d(TAG, "Stop action received")
             stopSelf()
             return START_NOT_STICKY
         }
@@ -80,7 +86,13 @@ class ScreenCaptureService : Service() {
         }
 
         startForeground(NOTIFICATION_ID, buildNotification())
-        startCapture(resultCode, data)
+        val captureStarted = startCapture(resultCode, data)
+
+        if (!captureStarted) {
+            Log.e(TAG, "Failed to start capture — stopping service")
+            stopSelf()
+            return START_NOT_STICKY
+        }
 
         CarBridge.setSurfaceListener(object : CarBridge.SurfaceListener {
             override fun onSurfaceReady(surface: android.view.Surface, width: Int, height: Int, dpi: Int) {
@@ -117,11 +129,16 @@ class ScreenCaptureService : Service() {
         return START_STICKY
     }
 
-    private fun startCapture(resultCode: Int, data: Intent) {
+    private fun startCapture(resultCode: Int, data: Intent): Boolean {
         val metrics = getPhoneMetrics()
         phoneWidth = metrics.first
         phoneHeight = metrics.second
         phoneDpi = metrics.third
+
+        if (phoneWidth <= 0 || phoneHeight <= 0) {
+            Log.e(TAG, "Invalid phone dimensions: ${phoneWidth}x${phoneHeight}")
+            return false
+        }
 
         val captureWidth = (phoneWidth * downscale).toInt()
         val captureHeight = (phoneHeight * downscale).toInt()
@@ -130,6 +147,11 @@ class ScreenCaptureService : Service() {
 
         val projectionManager = getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
         mediaProjection = projectionManager.getMediaProjection(resultCode, data)
+
+        if (mediaProjection == null) {
+            Log.e(TAG, "getMediaProjection returned null")
+            return false
+        }
 
         captureThread = HandlerThread("Capture").apply { start() }
         captureHandler = Handler(captureThread!!.looper)
@@ -143,7 +165,7 @@ class ScreenCaptureService : Service() {
 
         imageReader = ImageReader.newInstance(
             captureWidth, captureHeight,
-            PixelFormat.RGBA_8888, 2
+            ImageFormat.FLEX_RGBA_8888, 2
         )
 
         renderer = OpenGLRenderer()
@@ -155,7 +177,9 @@ class ScreenCaptureService : Service() {
                 val buffer = planes[0].buffer
                 val rgba = ByteArray(buffer.remaining())
                 buffer.get(rgba)
-                renderer?.frameQueue?.offer(rgba)
+                val q = renderer?.frameQueue
+                q?.clear()
+                q?.offer(rgba)
             }
             image.close()
         }, captureHandler)
@@ -168,15 +192,35 @@ class ScreenCaptureService : Service() {
             null, null
         )
 
+        if (virtualDisplay == null) {
+            Log.e(TAG, "createVirtualDisplay returned null")
+            imageReader?.close()
+            imageReader = null
+            mediaProjection?.stop()
+            mediaProjection = null
+            captureThread?.quitSafely()
+            captureThread = null
+            captureHandler = null
+            return false
+        }
+
         TouchInjectService.instance?.updatePhoneDimensions(phoneWidth, phoneHeight)
+        return true
     }
 
     private fun getPhoneMetrics(): Triple<Int, Int, Int> {
         val wm = getSystemService(WINDOW_SERVICE) as WindowManager
-        val metrics = DisplayMetrics()
-        @Suppress("DEPRECATION")
-        wm.defaultDisplay.getRealMetrics(metrics)
-        return Triple(metrics.widthPixels, metrics.heightPixels, metrics.densityDpi)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val windowMetrics = wm.currentWindowMetrics
+            val bounds = windowMetrics.bounds
+            val density = resources.displayMetrics.densityDpi
+            return Triple(bounds.width(), bounds.height(), density)
+        } else {
+            val metrics = DisplayMetrics()
+            @Suppress("DEPRECATION")
+            wm.defaultDisplay.getRealMetrics(metrics)
+            return Triple(metrics.widthPixels, metrics.heightPixels, metrics.densityDpi)
+        }
     }
 
     private fun buildNotification(): Notification {
@@ -198,7 +242,7 @@ class ScreenCaptureService : Service() {
 
         return Notification.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.notification_title))
-            .setContentText("Screen is being mirrored to Android Auto")
+            .setContentText(getString(R.string.notification_content))
             .setSmallIcon(R.drawable.ic_notification)
             .setOngoing(true)
             .addAction(android.R.drawable.ic_media_pause, getString(R.string.notification_stop), stopIntent)

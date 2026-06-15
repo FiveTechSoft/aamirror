@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         updatePermissionStatus()
         isCapturing = ScreenCaptureService.isRunning
+        updateCarStatus()
         updateUI()
     }
 
@@ -84,6 +85,15 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        // Check POST_NOTIFICATIONS on Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1001)
+                statusText.text = getString(R.string.status_error).format("Grant notification permission first")
+                return
+            }
+        }
+
         // Request MediaProjection
         val projectionManager = getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
         val intent = projectionManager.createScreenCaptureIntent()
@@ -96,14 +106,17 @@ class MainActivity : AppCompatActivity() {
             putExtra(ScreenCaptureService.EXTRA_DATA, data)
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent)
-        } else {
-            startService(intent)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent)
+            } else {
+                startService(intent)
+            }
+            isCapturing = true
+            updateUI()
+        } catch (e: Exception) {
+            statusText.text = getString(R.string.status_error).format(e.message)
         }
-
-        isCapturing = true
-        updateUI()
     }
 
     private fun stopCapture() {
@@ -134,10 +147,24 @@ class MainActivity : AppCompatActivity() {
             missing.add(getString(R.string.perm_accessibility_missing))
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                missing.add(getString(R.string.perm_notifications_missing))
+            }
+        }
+
         permissionStatus.text = if (missing.isEmpty()) {
             getString(R.string.perm_all_granted)
         } else {
             missing.joinToString("\n")
+        }
+    }
+
+    private fun updateCarStatus() {
+        if (ScreenCaptureService.isRunning) {
+            carStatusText.text = getString(R.string.car_status_connected)
+        } else {
+            carStatusText.text = getString(R.string.car_status_waiting)
         }
     }
 
